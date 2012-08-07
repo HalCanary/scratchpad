@@ -1,0 +1,11 @@
+#!/bin/sh
+# fix-mac-line-endings
+# Written 2012 Hal Canary.
+# This file dedicated to the public domain.
+test "$#" -lt 1 && {
+	echo "useage:"
+	echo "  $0 file[s]_to_be_modified [...]"
+	exit 1; }
+for a in "$@"; do
+	sed -i 's/\r/\n/g' "$a"
+done
