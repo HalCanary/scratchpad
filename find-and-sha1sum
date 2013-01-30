@@ -1,0 +1,17 @@
+
+#!/bin/sh
+# this script will calculate the sha1sum
+# for each regular file in the PWD.
+# and put it into a file called SHA1SUM.txt
+# It prints one "." to the stderr for each
+# file processed.
+# DTPD
+
+[ -f "SHA1SUM.txt" ] && rm -i SHA1SUM.txt
+TMPFILE=`mktemp`
+find . -type f \
+	-exec sha1sum {} ';' \
+	-fprintf /dev/stderr '.' \
+	> "${TMPFILE}"
+mv "${TMPFILE}" SHA1SUM.txt
+echo '' 2>&1

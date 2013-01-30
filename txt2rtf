@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+# txt2rtf.py
+# Written 2008 Hal Canary
+# Dedicated to the Public Domain
+import sys
+fi = sys.stdin
+fo = sys.stdout
+encoding = 'UTF-8'
+fo.write(r'{\rtf1\ansi\deff0{\fonttbl{\f0 Times New Roman;}}')
+fo.write(r'\paperh15840\paperw12240\margl1800\margr1800\margt1440\margb1440\fs24')
+fo.write('\n')
+for line in fi:
+  uline = unicode(line, encoding)
+  for char in uline:
+    if (char == "\n"):
+      fo.write("\\par\n")
+      continue
+    if (char == "\t"):
+      fo.write("\\tab ")
+      continue
+    if (char == "\\"):
+      fo.write("\\\\")
+      continue
+    if (char == "{"):
+      fo.write("\\{")
+      continue
+    if (char == "}"):
+      fo.write("\\}")
+      continue
+    ordchar = ord(char)
+    if (ordchar >= 128):
+      fo.write("\\u%d?" % ordchar)
+      continue
+    fo.write(char)
+fo.write('}\n\n')

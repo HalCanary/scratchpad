@@ -1,0 +1,8 @@
+#!/bin/sh
+#~/bin/infoless
+#DTPD#
+if [ $# -ne 1 ] ; then
+  echo "which page?"
+  exit 1
+fi
+exec info $1 2> /dev/null | less

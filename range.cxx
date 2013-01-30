@@ -4,6 +4,10 @@
 
   compile with:
      c++ -o range range.cxx -std=c++0x
+
+I just wrote this little class to implement Python's range()
+functionality with C++11's range-based for loops. Is there anything
+like this in the C++ standard library? If not, why not?
 */
 #include <iostream>
 struct range {
