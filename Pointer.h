@@ -14,6 +14,8 @@
 // limitations under the License.
 #ifndef POINTER_H
 #define POINTER_H
+/**
+   A wrapper for C pointers that makes them smart pointers. */
 template< typename T >
 class Pointer {
 private:
@@ -35,10 +37,17 @@ public:
   }
   operator T * () { return m_ptr; }
   operator T * () const { return m_ptr; }
-  bool operator!() const { return !m_ptr; }
+  bool operator!() const { return (! m_ptr); }
   T ** operator&() { return &m_ptr; }
   T ** operator&() const { return &m_ptr; }
   T * operator->() { return m_ptr; }
   T * operator->() const { return m_ptr; }
 };
+
+/**
+   A wrapper for the C free function that makes it type-correct. */
+template< typename T >
+inline void free(T * t_ptr) {
+  std::free(static_cast< void * >(t_ptr) );
+}
 #endif /* POINTER_H */
