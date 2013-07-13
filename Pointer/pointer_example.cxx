@@ -1,5 +1,4 @@
 // compile with "-lcrypto"
-#include <cstdlib> // free
 #include <iostream> // cout
 #include <exception> // exception
 #include <openssl/bn.h> // BIGNUM
@@ -13,7 +12,7 @@ int main(int, char **) {
   Pointer< BIGNUM > bn(NULL, BN_clear_free);
   if (! BN_hex2bn(& bn,hexnumber))
     throw std::exception();
-  Pointer< char > dec(BN_bn2dec(bn), free);
+  Pointer< char > dec(BN_bn2dec(bn));
   std::cout << dec << '\n';
   return 0;
 }

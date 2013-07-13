@@ -14,6 +14,15 @@
 // limitations under the License.
 #ifndef POINTER_H
 #define POINTER_H
+#include <cstdlib> // std::free(void *)
+
+/**
+   A wrapper for the C free function that makes it type-correct. */
+template< typename T >
+inline void free(T * t_ptr) {
+  std::free(static_cast< void * >(t_ptr) );
+}
+
 /**
    A wrapper for C pointers that makes them smart pointers. */
 template< typename T >
@@ -25,6 +34,9 @@ private:
 public:
   Pointer ( T * ptr, void (*freefn)( T *))
     : m_ptr(ptr), m_free(freefn) { }
+  /** Default to using std::free(void *) */
+  Pointer ( T * ptr )
+    : m_ptr(ptr), m_free(&(free< T >)) { }
   ~Pointer () {
     if (m_ptr)
       m_free(m_ptr);
@@ -44,10 +56,4 @@ public:
   T * operator->() const { return m_ptr; }
 };
 
-/**
-   A wrapper for the C free function that makes it type-correct. */
-template< typename T >
-inline void free(T * t_ptr) {
-  std::free(static_cast< void * >(t_ptr) );
-}
 #endif /* POINTER_H */
