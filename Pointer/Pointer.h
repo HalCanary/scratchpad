@@ -24,26 +24,34 @@ inline void free(T * t_ptr) {
 }
 
 /**
-   A wrapper for C pointers that makes them smart pointers. */
-template< typename T >
+   A wrapper for C pointers that makes them smart pointers.
+
+   Example use:
+     template< typename T >
+     inline T * allocate(unsigned int size=1) {
+       static_cast< T * >(std::malloc(size * sizeof(T)));
+     }
+     void f() {
+       static const unsigned int N = 100;
+       Pointer< char, free< char > > str(allocate< char >(N));
+       sprintf( str, "%d = 0x%04x\n", 0x1234, 0x1234);
+       std::cout << str;
+     } */
+template< typename T, void (*F)( T *) >
 class Pointer {
 private:
   T * m_ptr;
-  void (*m_free)(T *);
-  Pointer(const Pointer & p) { /* disallowed */}
+  Pointer(const Pointer &) { /* disallowed */}
 public:
-  Pointer ( T * ptr, void (*freefn)( T *))
-    : m_ptr(ptr), m_free(freefn) { }
-  /** Default to using std::free(void *) */
-  Pointer ( T * ptr )
-    : m_ptr(ptr), m_free(&(free< T >)) { }
+  Pointer ( T * ptr=NULL )
+    : m_ptr(ptr) { }
   ~Pointer () {
     if (m_ptr)
-      m_free(m_ptr);
+      F(m_ptr);
   }
   Pointer & operator=(T * ptr) {
     if (m_ptr)
-      m_free(m_ptr);
+      F(m_ptr);
     m_ptr = ptr;
     return *this;
   }
